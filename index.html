@@ -413,12 +413,13 @@ main{
   <!-- REGRAS -->
   <section class="section active" id="tab-regras">
     <div class="section-intro">As minhas regras de investimento, escritas por mim à medida que o livro me dá razões — ou motivos — para as fixar.</div>
+    <div class="section-intro"><span class="status-tag" style="margin-left:0">em desenvolvimento</span> Todas as regras ficam em revisão até ao fim do livro. Podem ser ajustadas, juntadas ou retiradas.</div>
 
     <div class="chapter open" id="regra-1">
       <div class="chapter-head" onclick="toggleChapter('regra-1')">
         <span class="num">Regra 01</span>
         <div class="head-text">
-          <div class="chap-title">Filtro único de qualidade → preço <span class="status-tag">em desenvolvimento</span></div>
+          <div class="chap-title">Filtro único de qualidade → preço</div>
           <div class="chap-tag">Não usar dois grupos separados (valor vs. crescimento) · trazido do projeto de análise de empresas</div>
         </div>
         <span class="chevron">›</span>
@@ -446,6 +447,25 @@ main{
 
           <div class="subhead">Nota técnica</div>
           <p>Ao aplicar isto entre empresas diferentes, confirmar que os pesos usados no Termómetro/score de "preço" são comparáveis entre si (ex.: algumas empresas usam P/E na ponderação, outras usam PEG em vez disso — scores de fontes com metodologias diferentes não são diretamente comparáveis sem ajuste).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="chapter" id="regra-2">
+      <div class="chapter-head" onclick="toggleChapter('regra-2')">
+        <span class="num">Regra 02</span>
+        <div class="head-text">
+          <div class="chap-title">Retorno recente não é expectativa</div>
+          <div class="chap-tag">Separar o que vem dos lucros do que vem de pagar mais · Cap. 3</div>
+        </div>
+        <span class="chevron">›</span>
+      </div>
+      <div class="chapter-body">
+        <div class="chapter-body-inner">
+          <p>Ao avaliar uma posição, separar o que veio dos lucros e dividendos do que veio de o preço estar a subir mais depressa que os lucros. Um preço alto não me diz quando vai cair, só que o retorno esperado é menor. Não é, por si só, sinal para vender.</p>
+
+          <div class="subhead">Como se liga à regra 01</div>
+          <p>A regra 01 manda avaliar o preço só depois da qualidade. Esta regra diz como avaliar esse preço com mais cuidado, sem tirar conclusões apressadas dos últimos anos.</p>
         </div>
       </div>
     </div>
@@ -526,8 +546,43 @@ main{
       </div>
     </div>
 
+    <div class="chapter" id="chap-3">
+      <div class="chapter-head" onclick="toggleChapter('chap-3')">
+        <span class="num">Cap. 03</span>
+        <div class="head-text">
+          <div class="chap-title">Um século de história do mercado</div>
+          <div class="chap-tag">De onde vem o retorno das ações</div>
+        </div>
+        <span class="chevron">›</span>
+      </div>
+      <div class="chapter-body">
+        <div class="chapter-body-inner">
+          <div class="subhead">O essencial</div>
+          <p>O mercado anda em ciclos muito grandes e passa quase sempre de um extremo ao outro: fases de euforia em que tudo sobe, seguidas de quedas fortes. Graham percorre cerca de cem anos de dados, não para prever o futuro, mas para dar uma referência do que é normal.</p>
+          <p>A ideia mais útil: o retorno das ações vem de duas coisas diferentes.</p>
+          <ul class="scheme">
+            <li><span class="label">Negócio</span><span>Os lucros das empresas e os dividendos que pagam</span></li>
+            <li><span class="label">Especulação</span><span>O que as pessoas aceitam pagar por cada euro de lucro (o P/E: se é 20, pagas 20 € por 1 € de lucro anual). Pode subir ou desaparecer de um dia para o outro</span></li>
+          </ul>
+          <p>Quando o mercado está caro, boa parte do retorno recente veio da segunda.</p>
+
+          <div class="subhead">Comentário do Zweig</div>
+          <p>Atualiza o capítulo com o boom dos anos 80 e 90, a bolha das dot-com (2000) e a crise de 2008. Usa a mesma divisão para mostrar que, nos anos 90, a subida foi sobretudo especulação e não lucros. Avisa também contra o erro de pegar nos últimos anos de retornos e assumir que serão sempre assim.</p>
+
+          <div class="subhead">O que envelheceu</div>
+          <p>Os números e níveis de preços de 1972 (o Dow Jones, os P/E da época) e a forma de comparar com a média dos lucros dos últimos anos, no estilo dele. O princípio mantém-se.</p>
+
+          <div class="subhead">O que é atemporal</div>
+          <p>O mercado oscila muito mais do que as empresas. Retornos passados não são promessa de retornos futuros. Quanto mais tempo e mais fortemente sobe, mais pesa a parte especulativa no resultado. Um mercado caro não diz quando vai cair, só que o retorno esperado é menor.</p>
+
+          <div class="subhead">Aplicação prática</div>
+          <p>Para cada posição: quanto do retorno dos últimos anos veio de os lucros crescerem e quanto veio de as pessoas pagarem mais por cada euro de lucro?</p>
+        </div>
+      </div>
+    </div>
+
     <div class="placeholder-chapter">
-      <span class="num">Cap. 03+</span>
+      <span class="num">Cap. 04+</span>
       <span class="txt">à espera da leitura</span>
     </div>
   </section>
@@ -551,6 +606,12 @@ main{
       <div class="entry-num">Cap. 02</div>
       <div class="entry-title">Custo invisível do dinheiro parado</div>
       <div class="entry-body"><p>Depósitos a prazo e Certificados de Aforro não chegam para bater a inflação a sério — é o mesmo princípio que explica o custo de oportunidade de ter demorado a entrar nos ETFs.</p></div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-num">Cap. 03</div>
+      <div class="entry-title">Lucros ou preço: de onde veio o retorno</div>
+      <div class="entry-body"><p>Para cada posição, separar o retorno que veio de os lucros crescerem do que veio de as pessoas pagarem mais por cada euro de lucro. Aplicar sobretudo aos ETFs e à exposição a semicondutores, onde os últimos anos foram fortes.</p></div>
     </div>
   </section>
 
