@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Margem de Segurança</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --paper: #EDE6D6;
+  --paper-2: #E4DCC8;
+  --ink: #1C2B22;
+  --forest: #2C4A3B;
+  --forest-2: #3C6350;
+  --brass: #9C7A34;
+  --rule: #9C4A3C;
+  --muted: #6E6656;
+  --line: #C9BFA6;
+  --card: #F4EFE1;
+}
+
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Source Serif 4', Georgia, serif;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* subtle ledger paper texture via repeating lines */
+.page{
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 27px,
+    rgba(28,43,34,0.045) 28px
+  );
+  min-height:100vh;
+  padding-bottom:60px;
+}
+
+header.top{
+  padding:28px 20px 18px 20px;
+  border-bottom:1px solid var(--line);
+  background:var(--paper);
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+.eyebrow{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--brass);
+  margin-bottom:6px;
+}
+h1.title{
+  font-family:'Fraunces', serif;
+  font-optical-sizing:auto;
+  font-weight:600;
+  font-size:30px;
+  margin:0;
+  letter-spacing:-0.01em;
+  color:var(--forest);
+}
+.subtitle{
+  font-size:13.5px;
+  color:var(--muted);
+  margin-top:4px;
+  font-style:italic;
+}
+
+/* Tabs styled as ledger folder dividers */
+nav.tabs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:2px;
+  padding:6px 14px;
+  background:var(--paper-2);
+  border-bottom:1px solid var(--line);
+  position:sticky;
+  top:88px;
+  z-index:19;
+}
+.tab-btn{
+  flex:0 0 auto;
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12px;
+  letter-spacing:0.03em;
+  padding:9px 12px;
+  background:transparent;
+  border:none;
+  color:var(--muted);
+  cursor:pointer;
+  border-bottom:3px solid transparent;
+  white-space:nowrap;
+}
+.tab-btn.active{
+  color:var(--forest);
+  border-bottom:3px solid var(--rule);
+  font-weight:600;
+}
+
+main{
+  padding:22px 18px 10px 18px;
+  position:relative;
+}
+
+.section{
+  display:none;
+}
+.section.active{display:block;}
+
+.section-intro{
+  font-size:13.5px;
+  color:var(--muted);
+  margin-bottom:18px;
+  font-style:italic;
+  padding-left:2px;
+  border-left:2px solid var(--line);
+  padding-left:10px;
+}
+
+/* Ledger entry cards */
+.entry{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-left:3px solid var(--forest);
+  margin-bottom:12px;
+  padding:14px 16px;
+}
+.entry-num{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+  color:var(--brass);
+  letter-spacing:0.08em;
+  margin-bottom:4px;
+}
+.entry-title{
+  font-family:'Fraunces', serif;
+  font-weight:600;
+  font-size:17px;
+  color:var(--forest);
+  margin:0 0 6px 0;
+}
+.entry-body{
+  font-size:14.5px;
+  color:var(--ink);
+}
+.entry-body p{margin:0 0 10px 0; text-align:justify; text-justify:inter-word;}
+.entry-body p:last-child{margin-bottom:0;}
+
+/* Chapter accordion */
+.chapter{
+  background:var(--card);
+  border:1px solid var(--line);
+  margin-bottom:10px;
+  overflow:hidden;
+}
+.chapter-head{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 14px;
+  cursor:pointer;
+  background:var(--card);
+}
+.chapter-head .num{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12px;
+  color:var(--brass);
+  border:1px solid var(--brass);
+  padding:2px 7px;
+  flex-shrink:0;
+}
+.chapter-head .head-text{flex:1;}
+.chapter-head .chap-title{
+  font-family:'Fraunces', serif;
+  font-weight:600;
+  font-size:15.5px;
+  color:var(--forest);
+}
+.chapter-head .chap-tag{
+  font-size:12.5px;
+  color:var(--muted);
+  font-style:italic;
+  margin-top:2px;
+}
+.status-tag{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:9.5px;
+  font-style:normal;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  color:var(--rule);
+  border:1px solid var(--rule);
+  padding:2px 6px;
+  margin-left:8px;
+  vertical-align:middle;
+  white-space:nowrap;
+}
+.chapter-head .chevron{
+  font-family:'IBM Plex Mono', monospace;
+  color:var(--rule);
+  transition:transform 0.2s ease;
+  flex-shrink:0;
+}
+.chapter.open .chevron{transform:rotate(90deg);}
+.chapter-body{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height 0.3s ease;
+  border-top:1px solid var(--line);
+}
+.chapter.open .chapter-body{max-height:2400px;}
+.chapter-body-inner{padding:14px 16px 18px 16px;}
+
+.subhead{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:10.5px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--rule);
+  margin:14px 0 6px 0;
+}
+.subhead:first-child{margin-top:0;}
+.chapter-body-inner p{
+  font-size:14px;
+  margin:0 0 4px 0;
+  color:var(--ink);
+  text-align:justify;
+  text-justify:inter-word;
+}
+
+.scheme{
+  margin:6px 0 4px 0;
+  padding:0;
+  list-style:none;
+}
+.scheme li{
+  display:flex;
+  gap:10px;
+  padding:9px 0;
+  border-top:1px solid var(--line);
+  font-size:14px;
+  color:var(--ink);
+}
+.scheme li:first-child{border-top:none;}
+.scheme .label{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11.5px;
+  letter-spacing:0.03em;
+  color:var(--forest);
+  font-weight:600;
+  flex:0 0 100px;
+  padding-top:1px;
+}
+
+.placeholder-chapter{
+  border:1px dashed var(--line);
+  background:transparent;
+  padding:14px 16px;
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  opacity:0.6;
+}
+.placeholder-chapter .num{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12px;
+  color:var(--muted);
+  border:1px solid var(--muted);
+  padding:2px 7px;
+}
+.placeholder-chapter .txt{
+  font-size:13px;
+  color:var(--muted);
+  font-style:italic;
+}
+
+/* Empty state */
+.empty{
+  padding:26px 16px;
+  text-align:center;
+  color:var(--muted);
+  font-style:italic;
+  font-size:13.5px;
+  border:1px dashed var(--line);
+}
+
+/* Add form (regras / citações) */
+.add-row{
+  display:flex;
+  gap:8px;
+  margin-bottom:16px;
+}
+.add-row input{
+  flex:1;
+  font-family:'Source Serif 4', serif;
+  font-size:14px;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  background:var(--card);
+  color:var(--ink);
+}
+.add-row input:focus{outline:2px solid var(--forest-2); outline-offset:1px;}
+.add-row button{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12px;
+  letter-spacing:0.04em;
+  background:var(--forest);
+  color:var(--paper);
+  border:none;
+  padding:0 16px;
+  cursor:pointer;
+}
+.add-row button:active{background:var(--forest-2);}
+
+.list-item{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-left:3px solid var(--brass);
+  padding:12px 14px;
+  margin-bottom:8px;
+  font-size:14.5px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+}
+.list-item .txt{flex:1;}
+.list-item .del{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+  color:var(--rule);
+  background:none;
+  border:none;
+  cursor:pointer;
+  padding:2px 4px;
+  flex-shrink:0;
+}
+
+.quote-item{
+  background:var(--card);
+  border:1px solid var(--line);
+  padding:16px 16px 14px 16px;
+  margin-bottom:10px;
+  position:relative;
+}
+.quote-item .mark{
+  font-family:'Fraunces', serif;
+  font-size:34px;
+  color:var(--rule);
+  opacity:0.5;
+  position:absolute;
+  top:-2px;
+  left:10px;
+  line-height:1;
+}
+.quote-item .qtext{
+  font-family:'Fraunces', serif;
+  font-style:italic;
+  font-size:15.5px;
+  color:var(--ink);
+  padding-left:20px;
+  margin-bottom:6px;
+}
+.quote-item .qmeta{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding-left:20px;
+}
+.quote-item .qsource{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+  color:var(--brass);
+}
+
+.loading-msg{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12px;
+  color:var(--muted);
+  padding:20px;
+  text-align:center;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="top">
+  <div class="eyebrow">Projeto · Investidor Inteligente, B. Graham</div>
+  <h1 class="title">Margem de Segurança</h1>
+  <div class="subtitle">o meu mapa pessoal de investimento</div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="tab-btn active" data-tab="regras">Regras</button>
+  <button class="tab-btn" data-tab="resumos">Resumos</button>
+  <button class="tab-btn" data-tab="buffett">Buffett</button>
+  <button class="tab-btn" data-tab="aplicacao">Aplicação</button>
+  <button class="tab-btn" data-tab="citacoes">Citações</button>
+</nav>
+
+<main>
+
+  <!-- REGRAS -->
+  <section class="section active" id="tab-regras">
+    <div class="section-intro">As minhas regras de investimento, escritas por mim à medida que o livro me dá razões — ou motivos — para as fixar.</div>
+
+    <div class="chapter open" id="regra-1">
+      <div class="chapter-head" onclick="toggleChapter('regra-1')">
+        <span class="num">Regra 01</span>
+        <div class="head-text">
+          <div class="chap-title">Filtro único de qualidade → preço <span class="status-tag">em desenvolvimento</span></div>
+          <div class="chap-tag">Não usar dois grupos separados (valor vs. crescimento) · trazido do projeto de análise de empresas</div>
+        </div>
+        <span class="chevron">›</span>
+      </div>
+      <div class="chapter-body">
+        <div class="chapter-body-inner">
+          <p>Não separar as análises em "empresas de valor/longo prazo" vs. "empresas de crescimento". Um único filtro sequencial, aplicado sempre pela mesma ordem, sem exceção.</p>
+
+          <div class="subhead">1º filtro — Qualidade (não negociável)</div>
+          <p>Moat, ROIC consistente, dívida controlada, previsibilidade dos resultados. Se a empresa falha aqui, é eliminada — independentemente do preço. O preço nunca compensa falta de qualidade.</p>
+
+          <div class="subhead">2º filtro — Preço (só depois da qualidade)</div>
+          <p>Só as empresas que passaram o filtro de qualidade são avaliadas quanto a preço: estão baratas ou caras face ao valor intrínseco / rácios históricos.</p>
+
+          <div class="subhead">Porquê um grupo só, e não dois</div>
+          <p>Separar em "gavetas" (valor vs. crescimento) cria o risco de baixar inconscientemente o critério de qualidade só porque uma empresa está classificada como "de crescimento" — abre a porta a justificar preços esticados com o argumento "é normal para este tipo de empresa". Isto corrompe a disciplina de separar qualidade de preço, que é o princípio central do critério Buffett.</p>
+
+          <div class="subhead">Resultado — 4 quadrantes (já usado no Dashboard Ser Riquinho)</div>
+          <ul class="scheme">
+            <li><span class="label">Zona Buffett</span><span>Qualidade alta + preço baixo → tese de investimento forte</span></li>
+            <li><span class="label">Vigiar</span><span>Qualidade alta + preço alto → boa empresa, más condições de entrada; esperar por melhor preço</span></li>
+            <li><span class="label">Armadilha de Valor</span><span>Qualidade baixa + preço baixo → preço baixo tem motivo, não é pechincha</span></li>
+            <li><span class="label">Evitar</span><span>Qualidade baixa + preço alto → sem argumento nenhum a favor</span></li>
+          </ul>
+
+          <div class="subhead">Nota técnica</div>
+          <p>Ao aplicar isto entre empresas diferentes, confirmar que os pesos usados no Termómetro/score de "preço" são comparáveis entre si (ex.: algumas empresas usam P/E na ponderação, outras usam PEG em vez disso — scores de fontes com metodologias diferentes não são diretamente comparáveis sem ajuste).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="add-row">
+      <input type="text" id="regra-input" placeholder="Escrever uma nova regra...">
+      <button onclick="addItem('regras')">Guardar</button>
+    </div>
+    <div id="regras-list"></div>
+  </section>
+
+  <!-- RESUMOS -->
+  <section class="section" id="tab-resumos">
+    <div class="section-intro">Não é um resumo académico — é o essencial de cada capítulo, filtrado pelo que ainda hoje é útil.</div>
+
+    <div class="chapter" id="chap-1">
+      <div class="chapter-head" onclick="toggleChapter('chap-1')">
+        <span class="num">Cap. 01</span>
+        <div class="head-text">
+          <div class="chap-title">Investimento vs. Especulação</div>
+          <div class="chap-tag">O teste que separa as duas coisas</div>
+        </div>
+        <span class="chevron">›</span>
+      </div>
+      <div class="chapter-body">
+        <div class="chapter-body-inner">
+          <div class="subhead">O essencial</div>
+          <p>Graham define investimento como uma operação que, depois de analisada com cuidado, promete segurança do capital e um retorno satisfatório. Tudo o resto é especulação — o que não é problema, desde que saibas que é isso que estás a fazer e limites o dinheiro que arriscas nisso.</p>
+          <p>Introduz os dois perfis de investidor:</p>
+          <ul class="scheme">
+            <li><span class="label">Defensivo</span><span>Simplicidade, poucas decisões, proteção acima de tudo</span></li>
+            <li><span class="label">Empreendedor</span><span>Disposto a dedicar tempo a analisar, em troca de retorno potencialmente melhor</span></li>
+          </ul>
+          <p>O erro é agir como um mas pensar que és o outro.</p>
+
+          <div class="subhead">Comentário do Zweig</div>
+          <p>Atualiza com exemplos da bolha das dot-com (2000) e do colapso de 2008 — mostra investidores "sérios" a comportarem-se como especuladores sem perceberem, especialmente durante a euforia da internet. Reforça o princípio do Graham sem o alterar.</p>
+
+          <div class="subhead">O que envelheceu</div>
+          <p>Os exemplos concretos de ações e obrigações da época (anos 40-70).</p>
+
+          <div class="subhead">O que é atemporal</div>
+          <p>A distinção investimento/especulação — a ferramenta mais útil do livro. Aplica-se tal e qual hoje, a qualquer ativo em euforia.</p>
+
+          <div class="subhead">Aplicação prática</div>
+          <p>Teste para cada posição: "Se analisasse isto com cuidado, esperaria segurança de capital e retorno razoável — ou estou só a apostar que sobe?" A exposição a semicondutores merece este filtro.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="chapter" id="chap-2">
+      <div class="chapter-head" onclick="toggleChapter('chap-2')">
+        <span class="num">Cap. 02</span>
+        <div class="head-text">
+          <div class="chap-title">O Investidor e a Inflação</div>
+          <div class="chap-tag">O custo invisível de deixar dinheiro parado</div>
+        </div>
+        <span class="chevron">›</span>
+      </div>
+      <div class="chapter-body">
+        <div class="chapter-body-inner">
+          <div class="subhead">O essencial</div>
+          <p>A inflação é uma erosão silenciosa: guardar dinheiro em ativos "seguros" (obrigações, poupança) não é realmente seguro se a inflação lhe corrói o valor todos os anos. Graham questiona também a ideia de que ações são proteção automática contra a inflação — a relação entre as duas não é assim tão direta ou fiável.</p>
+          <p>Conclusão prática: não construir a estratégia à volta de prever quanto vai ser a inflação (ninguém sabe com fiabilidade), mas garantir que a carteira aguenta cenários diferentes.</p>
+
+          <div class="subhead">Comentário do Zweig</div>
+          <p>Atualiza com o período de alta inflação dos anos 70-80 nos EUA: mesmo aí, as ações não protegeram de forma consistente e imediata — levaram anos a recuperar em termos reais. Diversificação (incluindo imobiliário, ou ouro com moderação) é resposta mais robusta do que tentar "acertar" na previsão de inflação.</p>
+
+          <div class="subhead">O que envelheceu</div>
+          <p>Os números concretos de inflação, juros e retornos da época — sem valor preditivo hoje. O contexto também: décadas de juros baixos até há pouco tempo, regime bem diferente do que o Graham conheceu.</p>
+
+          <div class="subhead">O que é atemporal</div>
+          <p>Dinheiro parado tem um custo invisível, e nenhuma classe de ativos é "automaticamente" proteção contra a inflação — todas têm de ser avaliadas caso a caso.</p>
+
+          <div class="subhead">Aplicação prática</div>
+          <p>Liga-se diretamente à pergunta sobre porque é que depósitos a prazo e Certificados de Aforro não chegam para bater a inflação a sério — e ao custo de oportunidade de ter mantido capital parado antes de entrar nos ETFs.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="placeholder-chapter">
+      <span class="num">Cap. 03+</span>
+      <span class="txt">à espera da leitura</span>
+    </div>
+  </section>
+
+  <!-- BUFFETT -->
+  <section class="section" id="tab-buffett">
+    <div class="section-intro">Onde as ideias do Graham se tornaram prática — e onde o Buffett se afastou dele.</div>
+    <div class="empty">Ainda por preencher. Vai crescendo à medida que os capítulos trazem pontos de contacto (ou de rutura) com a forma como o Buffett investiu.</div>
+  </section>
+
+  <!-- APLICAÇÃO -->
+  <section class="section" id="tab-aplicacao">
+    <div class="section-intro">Sempre que um conceito do livro cruzar com uma decisão real — carteira pessoal, semicondutores.</div>
+    <div class="entry">
+      <div class="entry-num">Cap. 01</div>
+      <div class="entry-title">Teste investimento vs. especulação</div>
+      <div class="entry-body"><p>Aplicar a cada posição: análise cuidada → segurança de capital + retorno razoável, ou é aposta? Rever especialmente a exposição a semicondutores sob este filtro.</p></div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-num">Cap. 02</div>
+      <div class="entry-title">Custo invisível do dinheiro parado</div>
+      <div class="entry-body"><p>Depósitos a prazo e Certificados de Aforro não chegam para bater a inflação a sério — é o mesmo princípio que explica o custo de oportunidade de ter demorado a entrar nos ETFs.</p></div>
+    </div>
+  </section>
+
+  <!-- CITAÇÕES -->
+  <section class="section" id="tab-citacoes">
+    <div class="section-intro">Frases para voltar a ler quando o mercado estiver a mexer com a cabeça, não com a razão.</div>
+    <div class="add-row">
+      <input type="text" id="citacao-input" placeholder="Escrever uma citação...">
+      <button onclick="addItem('citacoes')">Guardar</button>
+    </div>
+    <div id="citacoes-list"></div>
+  </section>
+
+</main>
+</div>
+
+<script>
+let store = { regras: [], citacoes: [] };
+
+async function loadStore(){
+  for(const key of ['regras','citacoes']){
+    try{
+      const res = await window.storage.get(key);
+      store[key] = res ? JSON.parse(res.value) : [];
+    }catch(e){
+      store[key] = [];
+    }
+  }
+  render('regras');
+  render('citacoes');
+}
+
+async function saveStore(key){
+  try{
+    await window.storage.set(key, JSON.stringify(store[key]));
+  }catch(e){
+    console.error('Erro a guardar', key, e);
+  }
+}
+
+function render(key){
+  const list = document.getElementById(key + '-list');
+  if(!list) return;
+  if(store[key].length === 0){
+    list.innerHTML = '<div class="empty">'+(key==='regras' ? 'Ainda sem regras. A primeira surge quando um capítulo te convencer de algo.' : 'Ainda sem citações guardadas.')+'</div>';
+    return;
+  }
+  if(key === 'citacoes'){
+    list.innerHTML = store[key].map((item, i) => `
+      <div class="quote-item">
+        <span class="mark">&ldquo;</span>
+        <div class="qtext">${escapeHtml(item)}</div>
+        <div class="qmeta">
+          <span class="qsource">registada</span>
+          <button class="del" onclick="removeItem('${key}', ${i})">remover</button>
+        </div>
+      </div>
+    `).join('');
+  } else {
+    list.innerHTML = store[key].map((item, i) => `
+      <div class="list-item">
+        <span class="txt">${escapeHtml(item)}</span>
+        <button class="del" onclick="removeItem('${key}', ${i})">remover</button>
+      </div>
+    `).join('');
+  }
+}
+
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+async function addItem(key){
+  const inputId = key === 'regras' ? 'regra-input' : 'citacao-input';
+  const input = document.getElementById(inputId);
+  const val = input.value.trim();
+  if(!val) return;
+  store[key].push(val);
+  input.value = '';
+  render(key);
+  await saveStore(key);
+}
+
+async function removeItem(key, index){
+  store[key].splice(index, 1);
+  render(key);
+  await saveStore(key);
+}
+
+function toggleChapter(id){
+  document.getElementById(id).classList.toggle('open');
+}
+
+document.getElementById('tabs').addEventListener('click', (e) => {
+  const btn = e.target.closest('.tab-btn');
+  if(!btn) return;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+});
+
+document.getElementById('regra-input').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') addItem('regras');
+});
+document.getElementById('citacao-input').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') addItem('citacoes');
+});
+
+loadStore();
+</script>
+</body>
+</html>
